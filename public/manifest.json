@@ -1,0 +1,20 @@
+{
+  "name": "印加宝藏",
+  "short_name": "印加宝藏",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2ecc71",
+  "icons": [
+    {
+      "src": "D:/TY/SJTU/Internship/qwen3_coder/Incon_Gold/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "D:/TY/SJTU/Internship/qwen3_coder/Incon_Gold/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
