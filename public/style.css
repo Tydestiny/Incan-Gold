@@ -105,6 +105,16 @@ input:focus {
 .player-card.exploring { border-left: 5px solid #f1c40f; background: #fffbe6; }
 .player-card.camp { border-left: 5px solid #95a5a6; background: #f1f1f1; opacity: 0.7; }
 .player-card.dead { border-left: 5px solid #e74c3c; background: #ffebeb; }
+/* AI 玩家卡片的特殊样式 */
+.player-card.bot-card {
+    background-color: #f3f0ff; /* 极淡的紫色背景 */
+    border-color: #dcd3ff;
+}
+
+/* 即使在探险中，AI 卡片也可以保留一点紫色边框暗示其身份 */
+.player-card.bot-card.exploring {
+    border-left: 5px solid #8e44ad; /* AI 专属紫色侧边条 */
+}
 
 /* 中间：卡牌区域 */
 #game-area {

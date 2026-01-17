@@ -20,7 +20,6 @@ io.on('connection', (socket) => {
         rooms[roomId] = game;
         socket.join(roomId);
         socket.emit('roomCreated', { roomId, playerId: socket.id, isHost: true });
-        // 立即更新一次，显示房主未准备
         socket.emit('playersUpdated', { players: game.getPlayersForBroadcast() });
     });
 
@@ -45,6 +44,16 @@ io.on('connection', (socket) => {
         }
     });
 
+    // --- 新增：添加 AI ---
+    socket.on('addBot', ({ roomId, difficulty }) => {
+        const game = rooms[roomId];
+        if (game && game.gameState === 'waiting') {
+            game.addBot(difficulty);
+            io.to(roomId).emit('playersUpdated', { players: game.getPlayersForBroadcast() });
+        }
+    });
+    // -------------------
+
     socket.on('startGame', (roomId) => {
         const game = rooms[roomId];
         if (game) {
@@ -56,11 +65,20 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('addBot', (roomId) => {
+        const game = rooms[roomId];
+        // 只有房主且在等待阶段可以添加
+        if (game && game.gameState === 'waiting') {
+            game.addBot();
+            // 广播更新玩家列表
+            io.to(roomId).emit('playersUpdated', { players: game.getPlayersForBroadcast() });
+        }
+    });
+
     socket.on('restartGame', (roomId) => {
         const game = rooms[roomId];
         if (game) {
-            game.resetGame(); // 重置数据
-            // 广播游戏重置事件，让前端切回大厅界面
+            game.resetGame();
             io.to(roomId).emit('gameReset', { players: game.getPlayersForBroadcast() });
         }
     });
@@ -95,6 +113,4 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ Server is successfully running on port ${PORT}`);
-});
+server.listen(PORT, '0.0.0.0', () => console.log(`Server is running on port ${PORT}`));

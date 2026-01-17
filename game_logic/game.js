@@ -1,4 +1,6 @@
 // game_logic/game.js
+const onnx = require('onnxruntime-node');
+const path = require('path');
 
 class IncanGoldGame {
     constructor(roomId) {
@@ -16,6 +18,9 @@ class IncanGoldGame {
         this.playerConfirmed = {};
         this.waitingForDecisions = false;
         this.winner = null;
+        this.aiSession = null;
+        this.hasBots = false;
+        this.loadAiModel();
     }
 
     addPlayer(playerId, playerName) {
@@ -53,6 +58,105 @@ class IncanGoldGame {
             return true;
         }
         return false;
+    }
+
+        // 加载训练好的 ONNX 模型
+    async loadAiModel() {
+        try {
+            const modelPath = path.join(__dirname, '..', 'incan_gold_selfplay_final.onnx');
+            this.aiSession = await onnx.InferenceSession.create(modelPath);
+            console.log(`[Room ${this.roomId}] 🤖 AI模型已就绪`);
+        } catch (e) {
+            console.error('AI加载失败:', e);
+        }
+    }
+
+    // 添加 AI 玩家
+    addBot() {
+        if (this.gameState !== 'waiting') return;
+        const botId = `bot_${Math.random().toString(36).substr(2, 5)}`;
+        const botName = `🤖 AI-${this.players.filter(p => p.isBot).length + 1}`;
+        
+        this.players.push({
+            id: botId,
+            name: botName,
+            treasures: 0,
+            roundGains: 0,
+            status: 'waiting',
+            isReady: true, // 机器人默认准备
+            isBot: true
+        });
+        this.hasBots = true;
+    }
+
+    // 提取 11 维状态向量 (必须与 Python 训练代码完全一致)
+    getGameStateVector(botId) {
+        const bot = this.players.find(p => p.id === botId);
+        
+        // 计算路上总余数
+        const pathRemainder = this.cardTreasures.reduce((sum, val) => 
+            (typeof val === 'number' ? sum + val : sum), 0);
+
+        // 获取路上神器数
+        const artifactCount = this.cardTreasures.filter(c => 
+            typeof c === 'string' && c.startsWith('artifact')).length;
+
+        // 构造数组
+        return Float32Array.from([
+            this.currentRound,                  // [0] 回合
+            bot.roundGains,                     // [1] 当前手里的钱
+            pathRemainder,                      // [2] 路上的钱
+            artifactCount,                      // [3] 神器数
+            this.revealedHazards['snake'] || 0, // [4] 灾难
+            this.revealedHazards['spider'] || 0,// [5]
+            this.revealedHazards['mummy'] || 0, // [6]
+            this.revealedHazards['fire'] || 0,  // [7]
+            this.revealedHazards['rocks'] || 0, // [8]
+            this.deck.length,                   // [9] 剩余牌数
+            this.explorersInTemple.length       // [10] 当前存活人数
+        ]);
+    }
+
+    // 执行 AI 决策
+    async makeBotDecisions(io) {
+        if (!this.waitingForDecisions) return;
+
+        // 找到还在神庙里的所有机器人
+        const bots = this.explorersInTemple
+            .map(id => this.players.find(p => p.id === id))
+            .filter(p => p && p.isBot);
+
+        if (bots.length === 0) return;
+
+        // 模拟 AI 思考延迟 (1.5秒左右)
+        await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+
+        for (const bot of bots) {
+            const inputVector = this.getGameStateVector(bot.id);
+            let action = 'continue'; // 默认继续
+
+            if (this.aiSession) {
+                try {
+                    const tensor = new onnx.Tensor('float32', inputVector, [1, 11]);
+                    const results = await this.aiSession.run({ input: tensor });
+                    const output = results.output.data; // [继续分, 返回分]
+                    
+                    if (output[1] > output[0]) action = 'return';
+                } catch (e) {
+                    console.error('AI推理出错:', e);
+                }
+            }
+
+            // 执行动作
+            this.playerAction(bot.id, action);
+            this.confirmPlayerAction(bot.id);
+            
+            // 广播通知前端
+            io.to(this.roomId).emit('playerDecided', { playerName: bot.name });
+        }
+
+        // 检查是否可以推进到下一阶段
+        this.checkAndProceedAfterDecision(io);
     }
 
     startGame() {
@@ -145,6 +249,10 @@ class IncanGoldGame {
             this.playerDecisions[id] = 'pending';
             this.playerConfirmed[id] = false;
         });
+
+        if (this.waitingForDecisions) {
+            this.makeBotDecisions(io);
+        }
     }
 
     handleHazardTrigger(io, hazardType) {
