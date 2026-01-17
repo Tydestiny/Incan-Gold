@@ -34,15 +34,19 @@
                     <div id="game-status"></div>
                     <div id="revealed-cards"></div>
                     <div id="controls">
+                        <!-- 默认隐藏，由 client.js 控制显示 -->
                         <button id="add-bot-btn" style="display:none; background:#8e44ad; color:white;">🤖 添加 AI 玩家</button>
-                        <button id="ready-btn">准备</button>
-                        <button id="start-game-btn" style="display:none">开始游戏</button>
+                        <button id="ready-btn" class="ready-btn">准备</button>
+                        <button id="start-game-btn" style="display:none; background:#2ecc71; color:white;">开始游戏</button>
+                        
+                        <!-- 游戏决策区 -->
                         <div id="action-buttons" style="display:none">
                             <button id="explore-btn" class="explore-btn">🤠 继续探险</button>
                             <button id="return-btn" class="return-btn">⛺ 返回营地</button>
                         </div>
+                        
                         <div id="confirm-buttons" style="display:none">
-                            <button id="confirm-btn" class="confirm-btn">确认决策</button>
+                            <button id="confirm-btn" class="confirm-btn" style="background:#3498db; color:white;">确认决策</button>
                             <button id="cancel-btn" class="cancel-btn">撤回</button>
                         </div>
                     </div>
