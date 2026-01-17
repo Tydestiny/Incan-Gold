@@ -23,30 +23,27 @@
         </div>
 
         <div id="game-screen" style="display:none">
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px;">
-                <h2>房间: <span id="room-id-display" style="color:#e67e22; font-family:monospace;"></span></h2>
-                <div id="round-info" style="font-size:1.2em; font-weight:bold;">回合: <span id="round-number">1</span>/5</div>
+            <div id="header-bar">
+                <h2>房间: <span id="room-id-display"></span></h2>
+                <div id="round-info">回合: <span id="round-number">1</span>/5</div>
             </div>
             
             <div id="main-layout">
                 <div id="players-list"></div>
                 <div id="game-area">
-                    <div id="game-status" style="text-align:center; margin-bottom:10px; font-weight:bold; color:#555; height:20px;"></div>
+                    <div id="game-status"></div>
                     <div id="revealed-cards"></div>
                     <div id="controls">
-                        <!-- JS 会在这里动态插入 host-controls (加AI按钮) -->
-                        <div id="host-controls"></div>
-                        
+                        <button id="add-bot-btn" style="display:none; background:#8e44ad; color:white;">🤖 添加 AI 玩家</button>
                         <button id="ready-btn">准备</button>
                         <button id="start-game-btn" style="display:none">开始游戏</button>
-                        <button id="add-bot-btn" class="primary-btn" style="display:none; background:#8e44ad;">🤖 添加AI玩家</button>
                         <div id="action-buttons" style="display:none">
                             <button id="explore-btn" class="explore-btn">🤠 继续探险</button>
                             <button id="return-btn" class="return-btn">⛺ 返回营地</button>
                         </div>
                         <div id="confirm-buttons" style="display:none">
                             <button id="confirm-btn" class="confirm-btn">确认决策</button>
-                            <button id="cancel-btn" class="cancel-btn">撤回重选</button>
+                            <button id="cancel-btn" class="cancel-btn">撤回</button>
                         </div>
                     </div>
                 </div>

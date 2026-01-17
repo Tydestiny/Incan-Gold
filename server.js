@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
         rooms[roomId] = game;
         socket.join(roomId);
         socket.emit('roomCreated', { roomId, playerId: socket.id, isHost: true });
-        socket.emit('playersUpdated', { players: game.getPlayersForBroadcast() });
+        io.to(roomId).emit('playersUpdated', { players: game.getPlayersForBroadcast() });
     });
 
     socket.on('joinRoom', ({ roomId, playerName }) => {
@@ -44,15 +44,13 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- 新增：添加 AI ---
-    socket.on('addBot', ({ roomId, difficulty }) => {
+    socket.on('addBot', ({ roomId }) => {
         const game = rooms[roomId];
         if (game && game.gameState === 'waiting') {
-            game.addBot(difficulty);
+            game.addBot();
             io.to(roomId).emit('playersUpdated', { players: game.getPlayersForBroadcast() });
         }
     });
-    // -------------------
 
     socket.on('startGame', (roomId) => {
         const game = rooms[roomId];
@@ -62,16 +60,6 @@ io.on('connection', (socket) => {
                 io.to(roomId).emit('gameStarted', { round: 1, players: game.getPlayersForBroadcast() });
                 game.startRound(io);
             } catch (e) { socket.emit('error', e.message); }
-        }
-    });
-
-    socket.on('addBot', (roomId) => {
-        const game = rooms[roomId];
-        // 只有房主且在等待阶段可以添加
-        if (game && game.gameState === 'waiting') {
-            game.addBot();
-            // 广播更新玩家列表
-            io.to(roomId).emit('playersUpdated', { players: game.getPlayersForBroadcast() });
         }
     });
 
