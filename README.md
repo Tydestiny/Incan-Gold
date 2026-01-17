@@ -1,4 +1,4 @@
-# 在线印加宝藏游戏 (Incan Gold Online)
+# 在线印加宝藏游戏 (Incan-Gold)
 
 这是一个基于Web的多人在线印加宝藏游戏实现，使用Node.js、Socket.IO和原生JavaScript开发。
 
