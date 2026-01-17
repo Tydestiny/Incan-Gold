@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Incan Gold Online</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="setup-screen">
+            <h1>💎 印加宝藏 Online</h1>
+            <input type="text" id="player-name" placeholder="请输入你的名字" maxlength="10">
+            <br>
+            <button id="create-room-btn" style="background:#2ecc71; color:white;">创建房间</button>
+            <div style="margin:20px; color:#999;">- 或 -</div>
+            <input type="text" id="room-id-input" placeholder="输入房间号" style="width:120px;">
+            <button id="join-room-btn" style="background:#3498db; color:white;">加入房间</button>
+        </div>
+
+        <div id="game-screen" style="display:none">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <h2>房间: <span id="room-id-display" style="color:#e67e22; font-family:monospace;"></span></h2>
+                <div id="round-info" style="font-size:1.2em; font-weight:bold;">回合: <span id="round-number">1</span>/5</div>
+            </div>
+            
+            <div id="main-layout">
+                <div id="players-list"></div>
+                <div id="game-area">
+                    <div id="game-status" style="text-align:center; margin-bottom:10px; font-weight:bold; color:#555; height:20px;"></div>
+                    <div id="revealed-cards"></div>
+                    <div id="controls">
+                        <button id="ready-btn">准备</button>
+                        <button id="start-game-btn" style="display:none">开始游戏</button>
+                        
+                        <div id="action-buttons" style="display:none">
+                            <button id="explore-btn" class="explore-btn">🤠 继续探险</button>
+                            <button id="return-btn" class="return-btn">⛺ 返回营地</button>
+                        </div>
+                        <div id="confirm-buttons" style="display:none">
+                            <button id="confirm-btn" class="confirm-btn">确认决策</button>
+                            <button id="cancel-btn" class="cancel-btn">撤回重选</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="log"></div>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>

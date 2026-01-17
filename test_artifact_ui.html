@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神器卡UI测试</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .test-area {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card {
+            display: inline-block;
+            width: 80px;
+            height: 120px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            vertical-align: top;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .card-value {
+            font-size: 20px;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .card-type {
+            font-size: 12px;
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-area">
+        <h2>神器卡UI显示测试</h2>
+        <p>以下是一个模拟的神器卡显示效果：</p>
+        
+        <div class="card artifact">
+            <div class="card-value">10</div>
+            <div class="card-type">神器</div>
+        </div>
+        
+        <div class="card artifact">
+            <div class="card-value">12</div>
+            <div class="card-type">神器</div>
+        </div>
+        
+        <div class="card artifact">
+            <div class="card-value">8</div>
+            <div class="card-type">神器</div>
+        </div>
+        
+        <h3>样式说明</h3>
+        <p>神器卡使用以下样式：</p>
+        <ul>
+            <li>背景色: #e6e6fa (薰衣草色)</li>
+            <li>边框色: #9370db (中紫色)</li>
+            <li>数值颜色: #4b0082 (靛蓝色)</li>
+            <li>类型标签: "神器"</li>
+        </ul>
+    </div>
+</body>
+</html>
