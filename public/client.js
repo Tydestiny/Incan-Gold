@@ -1,8 +1,8 @@
 let socket;
 let currentRoomId, myPlayerId, isHost = false;
 
-const IS_DEBUG = true; 
-const URL = IS_DEBUG ? 'http://localhost:3000' : 'https://你的项目.replit.app';
+const IS_DEBUG = false; 
+const URL = IS_DEBUG ? 'http://localhost:3000' : 'https://5fbf4901-80cf-474f-b535-5313b9e8b19a-00-256i8cxmrfhob.janeway.replit.dev/';
 
 const ui = {
     setup: document.getElementById('setup-screen'),
