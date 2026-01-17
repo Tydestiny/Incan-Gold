@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("https://5fbf4901-80cf-474f-b535-5313b9e8b19a-00-256i8cxmrfhob.janeway.replit.dev/");
 let currentRoomId, myPlayerId, isHost;
 
 const ui = {
